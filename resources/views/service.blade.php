@@ -11,13 +11,29 @@
         </div>
     </section>
 
-    <!-- SERVICES LIST -->
-    <!-- SERVICES SECTION -->
-    <section class="py-16">
+    <!-- TOGGLE BUTTONS -->
+    <section class="py-10">
         <div class="max-w-7xl mx-auto px-6 text-center">
-            <h2 class="text-3xl font-semibold text-gray-800">Our Services</h2>
 
-            <div class="grid md:grid-cols-3 gap-6 mt-10">
+            <div class="inline-flex bg-gray-100 rounded-lg p-1">
+                <button onclick="showTab('services')" class="tab-btn px-6 py-2 rounded-lg bg-blue-600 text-white">
+                    Services
+                </button>
+
+                <button onclick="showTab('tech')" class="tab-btn px-6 py-2 rounded-lg text-gray-600">
+                    Technologies
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- SERVICES -->
+    <section id="services-tab" class="py-10">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+
+            <div class="grid md:grid-cols-3 gap-6 mt-6">
 
                 @foreach (['Pain Management', 'Sports Injury Rehabilitation', 'Post-Surgery Rehab', 'Neurological Physiotherapy', 'Orthopedic Physiotherapy', 'Pediatric Physiotherapy', 'Geriatric Physiotherapy', 'Posture Correction & Ergonomics'] as $service)
                     <div class="bg-white rounded-xl shadow p-4 hover:shadow-md">
@@ -34,16 +50,16 @@
                 @endforeach
 
             </div>
+
         </div>
     </section>
 
 
-    <!-- TECHNOLOGIES SECTION -->
-    <section class="bg-gray-50 py-16">
+    <!-- TECHNOLOGIES -->
+    <section id="tech-tab" class="py-10 hidden">
         <div class="max-w-7xl mx-auto px-6 text-center">
-            <h2 class="text-3xl font-semibold text-gray-800">Technologies & Equipment</h2>
 
-            <div class="grid md:grid-cols-3 gap-6 mt-10">
+            <div class="grid md:grid-cols-3 gap-6 mt-6">
 
                 @foreach (['Electrotherapy (TENS, IFT)', 'Ultrasound Therapy', 'Laser Therapy', 'Shockwave Therapy', 'Traction Machines', 'CPM Machine', 'Exercise Therapy Equipment', 'Balance & Gait Training Tools'] as $tech)
                     <div class="bg-white rounded-xl shadow p-4 hover:shadow-md">
@@ -60,8 +76,11 @@
                 @endforeach
 
             </div>
+
         </div>
     </section>
+
+
     <!-- PROCESS -->
     <section class="bg-green-50 py-16">
         <div class="max-w-7xl mx-auto px-6 text-center">
@@ -95,4 +114,30 @@
             Book Appointment
         </a>
     </section>
+
+    <script>
+        function showTab(tab) {
+            const serviceTab = document.getElementById('services-tab');
+            const techTab = document.getElementById('tech-tab');
+            const buttons = document.querySelectorAll('.tab-btn');
+
+            // reset buttons
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('text-gray-600');
+            });
+
+            if (tab === 'services') {
+                serviceTab.classList.remove('hidden');
+                techTab.classList.add('hidden');
+
+                buttons[0].classList.add('bg-blue-600', 'text-white');
+            } else {
+                techTab.classList.remove('hidden');
+                serviceTab.classList.add('hidden');
+
+                buttons[1].classList.add('bg-blue-600', 'text-white');
+            }
+        }
+    </script>
 @endsection
