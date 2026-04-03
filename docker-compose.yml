@@ -1,0 +1,41 @@
+services:
+  app:
+    build: .
+    container_name: laravel_app
+    volumes:
+      - .:/var/www
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: laravel
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+
+  redis:
+    image: redis
+    container_name: redis_cache
+    ports:
+      - "6379:6379"
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_server
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
+
+volumes:
+  pgdata:

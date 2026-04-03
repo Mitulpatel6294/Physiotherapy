@@ -38,17 +38,34 @@
     </section>
     <section class="py-16">
         <div class="max-w-7xl mx-auto px-6 text-center">
-            <h2 class="text-3xl font-semibold text-gray-800">What Pain Are You Facing?</h2>
+            <h2 class="text-3xl font-semibold text-gray-800">
+                What Pain Are You Facing?
+            </h2>
 
             <div class="grid md:grid-cols-3 gap-6 mt-10">
 
-                @foreach (['Back Pain', 'Neck Pain', 'Knee Pain', 'Shoulder Pain', 'Foot Pain', 'Wrist Pain'] as $pain)
-                    <div class="bg-white p-6 rounded-xl shadow hover:shadow-md cursor-pointer">
-                        <h3 class="text-lg font-semibold text-blue-600">{{ $pain }}</h3>
-                        <p class="text-sm text-gray-500 mt-2">
-                            Click to explore treatment options
-                        </p>
-                    </div>
+                @foreach ($pains as $pain)
+                    <a href="{{ route('pain.show', $pain->slug) }}"
+                        class="block bg-white rounded-xl shadow hover:shadow-md overflow-hidden">
+
+                        <!-- IMAGE -->
+                        <div class="h-48 w-full">
+                            <img src="{{ asset('storage/pains/' . $pain->main_image) }}" class="w-full h-full object-cover"
+                                alt="{{ $pain->title }}">
+                        </div>
+
+                        <!-- CONTENT -->
+                        <div class="p-5 text-left">
+                            <h3 class="text-lg font-semibold text-blue-600">
+                                {{ $pain->title }}
+                            </h3>
+
+                            <p class="text-sm text-gray-500 mt-2">
+                                Click to explore treatment options
+                            </p>
+                        </div>
+
+                    </a>
                 @endforeach
 
             </div>
@@ -166,7 +183,7 @@
 
                 <form action="{{ route('password.set') }}" method="POST" class="mt-5 space-y-4">
                     @csrf
-    
+
                     <div>
                         <label class="text-sm text-gray-600">New Password</label>
                         <input type="password" name="password" required

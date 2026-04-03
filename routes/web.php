@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\SocialAuthController;
+use App\Http\Controllers\PainController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,5 +31,8 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/auth/google/redirect', [SocialAuthController::class, 'redirectToGoogle']);
 Route::get('/auth/google/callback', [SocialAuthController::class, 'handleGoogleCallback']);
+
+Route::get('/', [PainController::class, 'index'])->name('home');
+Route::get('/pain/{slug}', [PainController::class, 'show'])->name('pain.show');
 
 require __DIR__ . '/auth.php';
