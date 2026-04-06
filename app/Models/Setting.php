@@ -6,6 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
-    protected $fillable = ['email', 'phone', 'location', 'map_url'];
+    protected $fillable = ['email', 'phone', 'phone2', 'location', 'map_url'];
 
 }

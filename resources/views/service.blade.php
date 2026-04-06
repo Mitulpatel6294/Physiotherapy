@@ -32,25 +32,33 @@
     <!-- SERVICES -->
     <section id="services-tab" class="py-10">
         <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="grid md:grid-cols-3 gap-6 mt-10">
 
-            <div class="grid md:grid-cols-3 gap-6 mt-6">
+                @foreach ($services as $service)
+                    <a href="{{ route('services.show', $service->slug) }}"
+                        class="block bg-white rounded-xl shadow hover:shadow-md overflow-hidden">
 
-                @foreach (['Pain Management', 'Sports Injury Rehabilitation', 'Post-Surgery Rehab', 'Neurological Physiotherapy', 'Orthopedic Physiotherapy', 'Pediatric Physiotherapy', 'Geriatric Physiotherapy', 'Posture Correction & Ergonomics'] as $service)
-                    <div class="bg-white rounded-xl shadow p-4 hover:shadow-md">
-                        <img src="https://via.placeholder.com/300x200" class="rounded-lg w-full">
+                        <!-- IMAGE -->
+                        <div class="h-48 w-full">
+                            <img src="{{ asset('storage/services/' . $service->main_image) }}"
+                                class="w-full h-full object-cover" alt="{{ $service->title }}">
+                        </div>
 
-                        <h3 class="mt-4 font-semibold text-blue-600">
-                            {{ $service }}
-                        </h3>
+                        <!-- CONTENT -->
+                        <div class="p-5 text-left">
+                            <h3 class="text-lg font-semibold text-blue-600">
+                                {{ $service->title }}
+                            </h3>
 
-                        <p class="text-sm text-gray-500 mt-2">
-                            Click to explore treatment details.
-                        </p>
-                    </div>
+                            <p class="text-sm text-gray-500 mt-2">
+                                Click to explore services options
+                            </p>
+                        </div>
+
+                    </a>
                 @endforeach
 
             </div>
-
         </div>
     </section>
 
@@ -58,25 +66,33 @@
     <!-- TECHNOLOGIES -->
     <section id="tech-tab" class="py-10 hidden">
         <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="grid md:grid-cols-3 gap-6 mt-10">
 
-            <div class="grid md:grid-cols-3 gap-6 mt-6">
+                @foreach ($technologies as $tech)
+                    <a href="{{ route('services.show', $tech->slug) }}"
+                        class="block bg-white rounded-xl shadow hover:shadow-md overflow-hidden">
 
-                @foreach (['Electrotherapy (TENS, IFT)', 'Ultrasound Therapy', 'Laser Therapy', 'Shockwave Therapy', 'Traction Machines', 'CPM Machine', 'Exercise Therapy Equipment', 'Balance & Gait Training Tools'] as $tech)
-                    <div class="bg-white rounded-xl shadow p-4 hover:shadow-md">
-                        <img src="https://via.placeholder.com/300x200" class="rounded-lg w-full">
+                        <!-- IMAGE -->
+                        <div class="h-48 w-full">
+                            <img src="{{ asset('storage/services/' . $tech->main_image) }}" class="w-full h-full object-cover"
+                                alt="{{ $tech->title }}">
+                        </div>
 
-                        <h3 class="mt-4 font-semibold text-green-600">
-                            {{ $tech }}
-                        </h3>
+                        <!-- CONTENT -->
+                        <div class="p-5 text-left">
+                            <h3 class="text-lg font-semibold text-blue-600">
+                                {{ $tech->title }}
+                            </h3>
 
-                        <p class="text-sm text-gray-500 mt-2">
-                            Advanced tools for faster recovery.
-                        </p>
-                    </div>
+                            <p class="text-sm text-gray-500 mt-2">
+                                Click to explore services options
+                            </p>
+                        </div>
+
+                    </a>
                 @endforeach
 
             </div>
-
         </div>
     </section>
 

@@ -1,5 +1,11 @@
 @extends('layouts.app')
 
+@php
+    /**
+     * @var \Illuminate\Database\Eloquent\Collection|\App\Models\Gallery[] $galleries
+     */
+@endphp
+
 @section('content')
     <!-- HERO -->
     <section class="bg-blue-50 py-16 text-center">
@@ -62,57 +68,119 @@
 
             <div class="grid md:grid-cols-3 gap-8 mt-10">
 
-                @foreach ([
-            [
-                'name' => 'Dr. Rahul Mehta',
-                'role' => 'Senior Physiotherapist',
-                'desc' => 'Specialist in orthopedic rehabilitation and chronic pain management.',
-                'img' => 'https://via.placeholder.com/200',
-            ],
-            [
-                'name' => 'Dr. Priya Shah',
-                'role' => 'Sports Injury Expert',
-                'desc' => 'Focused on sports recovery and performance improvement.',
-                'img' => 'https://via.placeholder.com/200',
-            ],
-            [
-                'name' => 'Dr. Amit Patel',
-                'role' => 'Rehabilitation Specialist',
-                'desc' => 'Expert in post-surgery recovery and mobility improvement.',
-                'img' => 'https://via.placeholder.com/200',
-            ],
-        ] as $therapist)
+                @forelse ($therapists as $therapist)
                     <div class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition">
 
-                        <img src="{{ $therapist['img'] }}" class="w-32 h-32 mx-auto rounded-full object-cover">
+                        <img src="{{ asset('storage/therapist/' . $therapist->photo) }}"
+                            class="w-32 h-32 mx-auto rounded-full object-cover">
 
                         <h3 class="mt-4 text-lg font-semibold text-blue-600">
-                            {{ $therapist['name'] }}
+                            {{ $therapist->name }}
                         </h3>
 
                         <p class="text-sm text-green-600">
-                            {{ $therapist['role'] }}
+                            {{ $therapist->position }}
                         </p>
 
                         <p class="text-sm text-gray-500 mt-2">
-                            {{ $therapist['desc'] }}
+                            {{ $therapist->description }}
                         </p>
 
                     </div>
-                @endforeach
+                @empty
+                    <p class="text-gray-500 md:col-span-3">No therapists found.</p>
+                @endforelse
 
             </div>
         </div>
     </section>
 
+    <!-- GALLERY -->
+    <!-- GALLERY -->
+    <section class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <h2 class="text-3xl font-semibold text-gray-800">Our Clinic Gallery</h2>
+
+            <div class="grid md:grid-cols-3 gap-6 mt-10">
+                @forelse ($galleries ?? [] as $gallery)
+                    @if(empty($gallery->image_path))
+                        @continue
+                    @endif
+
+                    @php
+                        $fallbackSrc = 'https://via.placeholder.com/800x600?text=Gallery+Image';
+                        $imgUrl = Str::startsWith($gallery->image_path, ['http://', 'https://'])
+                            ? $gallery->image_path
+                            : asset('storage/gallery/' . ltrim($gallery->image_path, '/'));
+                    @endphp
+
+                    <!-- Thumbnail -->
+                    <div class="relative h-64 rounded-xl shadow cursor-pointer bg-gray-100 overflow-hidden"
+                        onclick="showGalleryZoom('{{ $imgUrl }}')">
+
+                        <img src="{{ $imgUrl }}" class="w-full h-full object-cover"
+                            onerror="this.onerror=null; this.src='{{ $fallbackSrc }}';">
+                    </div>
+
+                @empty
+                    <p class="text-gray-500 md:col-span-3 text-sm">No gallery images available yet.</p>
+                @endforelse
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL -->
+    <div id="gallery-zoom-overlay" class="fixed inset-0 z-[9999] bg-black/80 hidden flex items-center justify-center p-4">
+
+        <div class="relative w-full max-w-3xl bg-black rounded-xl flex items-center justify-center">
+            <!-- Image -->
+            <img id="gallery-zoom-img" src="" class="w-full max-h-[80vh] object-contain rounded-xl">
+        </div>
+
+    </div>
+
+    <script>
+        function showGalleryZoom(src) {
+            const overlay = document.getElementById('gallery-zoom-overlay');
+            const img = document.getElementById('gallery-zoom-img');
+
+            img.src = src;
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+        }
+
+        function hideGalleryZoom() {
+            const overlay = document.getElementById('gallery-zoom-overlay');
+            const img = document.getElementById('gallery-zoom-img');
+
+            overlay.classList.add('hidden');
+            overlay.classList.remove('flex');
+            img.src = '';
+        }
+
+        // Close on background click
+        document.getElementById('gallery-zoom-overlay').addEventListener('click', function (e) {
+            if (e.target === this) {
+                hideGalleryZoom();
+            }
+        });
+    </script>
+
     <!-- STATS -->
-    <section class="py-16 text-center">
+    <section class="py-16 text-center bg-gray-50">
         <div class="max-w-5xl mx-auto px-6 grid md:grid-cols-4 gap-6">
-            @foreach (['500+ Patients', '10+ Experts', '5+ Years', '100% Care'] as $stat)
-                <div>
-                    <h3 class="text-2xl font-bold text-blue-600">{{ $stat }}</h3>
-                </div>
-            @endforeach
+            <div>
+                <h3 class="text-2xl font-bold text-blue-600">{{ $patientCount ?? 500 }}+ Patients</h3>
+            </div>
+            <div>
+                <h3 class="text-2xl font-bold text-blue-600">{{ $expertCount ?? 10 }}+ Experts</h3>
+            </div>
+            <div>
+                <h3 class="text-2xl font-bold text-blue-600">5+ Years</h3>
+            </div>
+            <div>
+                <h3 class="text-2xl font-bold text-blue-600">100% Care</h3>
+            </div>
         </div>
     </section>
 
@@ -122,14 +190,19 @@
             <h2 class="text-3xl font-semibold text-gray-800">Patient Feedback</h2>
 
             <div class="grid md:grid-cols-3 gap-6 mt-10">
-                @for ($i = 0; $i < 3; $i++)
+                @forelse ($feedbacks as $feedback)
                     <div class="bg-white p-6 rounded-xl shadow">
                         <p class="text-gray-600 text-sm">
-                            “Great recovery experience. Highly recommended.”
+                            “{{ $feedback->message }}”
                         </p>
-                        <h4 class="mt-4 font-semibold text-green-600">Patient</h4>
+                        <h4 class="mt-4 font-semibold text-green-600">{{ $feedback->name }}</h4>
+                        @if ($feedback->email)
+                            <p class="text-xs text-gray-400 mt-1">{{ $feedback->email }}</p>
+                        @endif
                     </div>
-                @endfor
+                @empty
+                    <p class="md:col-span-3 text-gray-400 text-sm">No patient feedback available yet.</p>
+                @endforelse
             </div>
         </div>
     </section>

@@ -5,14 +5,13 @@
     <section class="bg-blue-50">
         <div class="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-10 items-center">
 
-            <!-- TEXT -->
             <div>
                 <h1 class="text-4xl font-bold text-blue-700">
-                    {{ $pain->title }}
+                    {{ $service->title }}
                 </h1>
 
                 <p class="mt-4 text-gray-600 text-lg">
-                    {{ $pain->short_description }}
+                    {{ $service->short_description }}
                 </p>
 
                 <a href="{{ url('/#appointment') }}"
@@ -21,44 +20,42 @@
                 </a>
             </div>
 
-            <!-- MAIN IMAGE -->
             <div>
-                <img src="{{ asset('storage/pains/' . $pain->main_image) }}" class="rounded-xl shadow w-full object-cover">
+                <img src="{{ asset('storage/services/' . $service->main_image) }}"
+                    class="rounded-xl shadow w-full object-cover">
             </div>
 
         </div>
     </section>
 
-
-    <!-- FULL DESCRIPTION -->
     <section class="py-16">
         <div class="max-w-4xl mx-auto px-6 text-center">
 
             <h2 class="text-3xl font-semibold text-gray-800">
-                About This Condition
+                About This {{ $service->category === 'technology' ? 'Technology' : 'Service' }}
             </h2>
 
             <p class="mt-6 text-gray-600 leading-relaxed">
-                {{ $pain->full_description }}
+                {{ $service->full_description }}
             </p>
 
         </div>
     </section>
 
     <!-- GALLERY -->
-    @if ($pain->images->count())
+    @if ($service->images->count())
         <section class="bg-gray-50 py-16">
             <div class="max-w-7xl mx-auto px-6 text-center">
 
                 <h2 class="text-3xl font-semibold text-gray-800">
-                    Treatment Gallery
+                    Gallery
                 </h2>
 
                 <div class="grid md:grid-cols-3 gap-6 mt-10">
 
-                    @foreach ($pain->images as $img)
+                    @foreach ($service->images as $img)
                         <div class="bg-white p-2 rounded-xl shadow">
-                            <img src="{{ asset('storage/sub_pains/' . $img->image_path) }}"
+                            <img src="{{ asset('storage/sub_services/' . $img->image_path) }}"
                                 class="rounded-lg w-full h-52 object-cover">
                         </div>
                     @endforeach
@@ -68,7 +65,6 @@
             </div>
         </section>
     @endif
-
     <section class="py-16">
         <div class="max-w-7xl mx-auto px-6 text-center">
 
@@ -78,10 +74,10 @@
 
             <div class="grid md:grid-cols-4 gap-6 mt-10">
 
-                @forelse ($pain->services as $service)
+                @forelse ($service->pains as $pain)
                     <div class="bg-white rounded-xl shadow p-4 text-left">
-                        @if ($service->main_image)
-                            <img src="{{ asset('storage/services/' . $service->main_image) }}" alt="{{ $service->title }}"
+                        @if ($pain->main_image)
+                            <img src="{{ asset('storage/pains/' . $pain->main_image) }}" alt="{{ $pain->title }}"
                                 class="rounded-lg w-full h-48 object-cover">
                         @else
                             <div class="rounded-lg w-full h-48 bg-blue-50 flex items-center justify-center">
@@ -89,14 +85,10 @@
                             </div>
                         @endif
 
-                        <span class="mt-3 inline-block text-xs font-medium bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                            {{ $service->category }}
-                        </span>
+                        <h3 class="mt-2 font-semibold text-blue-600">{{ $pain->title }}</h3>
+                        <p class="text-sm text-gray-500 mt-2">{{ $pain->short_description }}</p>
 
-                        <h3 class="mt-2 font-semibold text-blue-600">{{ $service->title }}</h3>
-                        <p class="text-sm text-gray-500 mt-2">{{ $service->short_description }}</p>
-
-                        <a href="{{ route('services.show', $service->slug) }}"
+                        <a href="{{ route('pain.show', $pain->slug) }}"
                             class="mt-4 inline-block text-sm text-blue-600 hover:underline font-medium">
                             Learn More →
                         </a>
@@ -109,12 +101,13 @@
 
         </div>
     </section>
+
     <!-- WHY CHOOSE US -->
     <section class="py-16">
         <div class="max-w-7xl mx-auto px-6 text-center">
 
             <h2 class="text-3xl font-semibold text-gray-800">
-                Why Choose Our Treatment?
+                Why Choose Our {{ $service->category === 'technology' ? 'Technology' : 'Service' }}?
             </h2>
 
             <div class="grid md:grid-cols-4 gap-6 mt-10">
@@ -136,7 +129,7 @@
     <!-- CTA -->
     <section class="bg-blue-100 py-16 text-center">
         <h2 class="text-3xl font-semibold text-gray-800">
-            Ready to Recover from {{ $pain->title }}?
+            Ready to Get Started with {{ $service->title }}?
         </h2>
 
         <a href="{{ url('/#appointment') }}"
